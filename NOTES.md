@@ -18,4 +18,8 @@ hello!
   - Set up Font api for custom fonts!
 
 - Configure Ionicons for iOS (if necessary, DONT use linking)
+
   - Link: https://github.com/oblador/react-native-vector-icons
+
+- Do styling ourselfes, or use framework?
+  - Have some saved under dev tab

@@ -7,14 +7,6 @@
  */
 
 import React, {useState} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
 
 import {createStore, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
@@ -36,7 +28,5 @@ const App = () => {
     </Provider>*/
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default App;

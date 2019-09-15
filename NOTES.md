@@ -15,6 +15,7 @@ hello!
 - "Upgrade" to Expo Bare Workflow for some simplified API connections (sqlite etc...)
 
   - Link: https://github.com/unimodules/react-native-unimodules
+  - Set up Font api for custom fonts!
 
 - Configure Ionicons for iOS (if necessary, DONT use linking)
   - Link: https://github.com/oblador/react-native-vector-icons

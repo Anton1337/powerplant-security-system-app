@@ -21,9 +21,9 @@ const TabNavigator = createBottomTabNavigator(
         let IconComponent = Ionicons;
         let iconName;
         if (routeName === 'Home') {
-          iconName = 'home'; //`ios-information-circle${focused ? '' : '-outline'}`;
+          iconName = 'ios-home'; //`ios-information-circle${focused ? '' : '-outline'}`;
         } else if (routeName === 'Radiation') {
-          iconName = 'pulse'; //'ios-options';
+          iconName = 'ios-pulse'; //'ios-options';
         }
 
         return <IconComponent name={iconName} size={25} color={tintColor} />;

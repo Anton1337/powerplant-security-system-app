@@ -13,6 +13,7 @@ const RadiationScreen = () => {
   return (
     <View>
       <Text> Hello from Radiation screen!</Text>
+      <Text>Anton gillar män</Text>
     </View>
   );
 };

@@ -9,12 +9,13 @@ import {
   StatusBar,
 } from 'react-native';
 
+
 const RadiationScreen = () => {
   return (
-    <View>
+    <SafeAreaView>
       <Text> Hello from Radiation screen!</Text>
       <Text>Anton gillar män</Text>
-    </View>
+    </SafeAreaView>
   );
 };
 

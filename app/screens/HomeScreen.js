@@ -11,14 +11,14 @@ import {
 
 const HomeScreen = () => {
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       {/* CLOCK IN STATUS */}
       <View style={styles.clockStatus}>
         <Text style={styles.clockText}>
           You are <Text style={styles.clockStatusText}>Clocked in!</Text>
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

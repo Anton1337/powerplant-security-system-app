@@ -14,7 +14,7 @@ const RadiationScreen = () => {
   return (
     <SafeAreaView>
       <Text> Hello from Radiation screen!</Text>
-      <Text>Anton gillar kvinnor</Text>
+      <Text>Anton gillar män</Text>
     </SafeAreaView>
   );
 };

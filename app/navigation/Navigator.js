@@ -8,11 +8,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // Screens
 import HomeScreen from '../screens/HomeScreen';
 import RadiationScreen from '../screens/RadiationScreen';
+import ConnectBluetoohScreen from '../screens/ConnectBluetoothScreen';
 
 const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
     Radiation: RadiationScreen,
+    Connect: ConnectBluetoohScreen
   },
   {
     defaultNavigationOptions: ({navigation}) => ({
@@ -24,6 +26,8 @@ const TabNavigator = createBottomTabNavigator(
           iconName = 'md-home';
         } else if (routeName === 'Radiation') {
           iconName = 'md-pulse';
+        } else if (routeName === 'Connect'){
+          iconName = 'md-bluetooth';
         }
 
         return <IconComponent name={iconName} size={25} color={tintColor} />;

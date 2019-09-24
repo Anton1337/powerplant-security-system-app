@@ -8,24 +8,29 @@
 
 import React, {useState} from 'react';
 
-import {createStore, combineReducers} from 'redux';
+import {createStore, combineReducers, applyMiddleware} from 'redux';
+import {composeWithDevTools} from 'redux-devtools-extension'
 import {Provider} from 'react-redux';
+import thunk from 'redux-thunk'
+
+const initialState = {}
+const middleware = [thunk]
 
 // Reducer imports
 
 import Navigator from './navigation/Navigator';
+import clocks from './store/reducers/clocks'
 
 // Redux
-//const rootReducer = combineReducers({});
+const rootReducer = combineReducers({clocks});
 
-//const store = createStore(rootReducer);
+const store = createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(...middleware)));
 
 const App = () => {
   return (
-    <Navigator />
-    /*<Provider store={store}>
-      
-    </Provider>*/
+    <Provider store={store}>
+      <Navigator />
+    </Provider>
   );
 };
 

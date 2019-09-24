@@ -1,4 +1,6 @@
 import React from 'react';
+import BluetoothSerial from 'react-native-bluetooth-serial'
+import {connect} from 'react-redux'
 
 import {
   SafeAreaView,
@@ -9,18 +11,23 @@ import {
   StatusBar,
 } from 'react-native';
 
-const HomeScreen = () => {
+const HomeScreen = (state) => {
+  console.log(JSON.stringify(state.clocks))
   return (
     <SafeAreaView style={styles.screen}>
       {/* CLOCK IN STATUS */}
       <View style={styles.clockStatus}>
         <Text style={styles.clockText}>
-          You are <Text style={styles.clockStatusText}>Clocked in!</Text>
+          You are <Text style={state.clocks.clockedIn ? styles.clockInStatusText : styles.clockOutStatusText}>Clocked {state.clocks.clockedIn ? 'in' : 'out'}!</Text>
         </Text>
       </View>
     </SafeAreaView>
   );
 };
+
+const mapStateToProps = state => ({
+  clocks: state.clocks
+})
 
 const styles = StyleSheet.create({
   screen: {
@@ -43,9 +50,12 @@ const styles = StyleSheet.create({
   clockText: {
     fontSize: 18,
   },
-  clockStatusText: {
+  clockInStatusText: {
     color: 'green',
   },
+  clockOutStatusText: {
+    color: 'red',
+  }
 });
 
-export default HomeScreen;
+export default connect(mapStateToProps, null)(HomeScreen);

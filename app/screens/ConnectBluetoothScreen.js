@@ -66,6 +66,7 @@ class ConnectBluetoothScreen extends Component {
     BluetoothSerial.connect(device.id)
     .then((res) => {
       console.log(`Connected to device ${device.name}`);
+      this.getCurrentTime()
       this.bluetoothListener()
       //TODO: skicka med date.now till arduinon.
       ToastAndroid.show(`Connected to device ${device.name}`, ToastAndroid.SHORT);
@@ -86,6 +87,8 @@ class ConnectBluetoothScreen extends Component {
           case "Y":
             this.technicianClockOut(data);
             break;
+          case "W":
+            this.radiationTimeLimit();
           default:
             break;
         }
@@ -148,6 +151,16 @@ class ConnectBluetoothScreen extends Component {
     .catch((err) => console.log(err.message))
   }
 
+  getCurrentTime(){
+    const now = new Date().toLocaleTimeString()
+    BluetoothSerial.write(now)
+    .then((res) => {
+      console.log(res);
+      this.setState({connected: true})
+    })
+    .catch((err) => console.log(err.message))
+  }
+
   technicianClockIn(data){
     this.props.clockIn()
     ToastAndroid.show(`Clock in`, ToastAndroid.SHORT);
@@ -156,6 +169,10 @@ class ConnectBluetoothScreen extends Component {
   technicianClockOut(data){
     this.props.clockOut()
     ToastAndroid.show(`Clock out`, ToastAndroid.SHORT);
+  }
+
+  radiationTimeLimit(){
+    ToastAndroid.show("WARNING! GET OUT!!!!!!!!", ToastAndroid.LONG)
   }
 
   render() {

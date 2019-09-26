@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import {connect} from 'react-redux'
 
@@ -12,28 +12,52 @@ import {
 } from 'react-native';
 
 const HomeScreen = (state) => {
-  console.log(JSON.stringify(state.clocks))
+  console.log("FROM HOMESCREEN")
+  console.log(state.countdown.seconds)
+  /*const [warningRed, setWarningRed] = useState(false);
+
+  useEffect(() => {
+    if(state.warning.warning) blinking();
+  }, [])
+
+  const blinking = () => {
+    setInterval( () => {
+      setWarningRed(previousState => {
+        return !previousState.warningRed
+      });
+    }, 500)
+  }*/
   return (
-    <SafeAreaView style={styles.screen}>
+    <View style={state.warning.warning ? styles.warningScreen : styles.screen}>
       {/* CLOCK IN STATUS */}
       <View style={styles.clockStatus}>
         <Text style={styles.clockText}>
           You are <Text style={state.clocks.clockedIn ? styles.clockInStatusText : styles.clockOutStatusText}>Clocked {state.clocks.clockedIn ? 'in' : 'out'}!</Text>
         </Text>
       </View>
-    </SafeAreaView>
+      {/* CLOCK TIMER COUNTDOWN */}
+      <View style={styles.countdownView}>
+          <Text style={styles.countdownTimer}>{state.countdown.seconds}</Text>
+        </View>
+    </View>
   );
 };
 
 const mapStateToProps = state => ({
-  clocks: state.clocks
+  clocks: state.clocks,
+  warning: state.warning,
+  countdown: state.countdown
 })
 
 const styles = StyleSheet.create({
   screen: {
-    margin: 20,
+  },
+  warningScreen: {
+    backgroundColor: 'red',
+    flex: 1
   },
   clockStatus: {
+    margin: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -55,6 +79,16 @@ const styles = StyleSheet.create({
   },
   clockOutStatusText: {
     color: 'red',
+  },
+  countdownView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  countdownTimer: {
+    marginTop: '40%',
+    fontSize: 45
   }
 });
 

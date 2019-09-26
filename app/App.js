@@ -18,11 +18,13 @@ const middleware = [thunk]
 
 // Reducer imports
 
-import Navigator from './navigation/Navigator';
+import Navigator from './navigation/Navigator'
 import clocks from './store/reducers/clocks'
+import warning from './store/reducers/warning'
+import countdown from './store/reducers/countdown'
 
 // Redux
-const rootReducer = combineReducers({clocks});
+const rootReducer = combineReducers({clocks, warning, countdown});
 
 const store = createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(...middleware)));
 

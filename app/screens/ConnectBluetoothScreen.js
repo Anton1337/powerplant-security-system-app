@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import {clockIn, clockOut} from '../store/actions/clocks'
+import {warning, removeWarning} from '../store/actions/warning'
+import {countdownTimer} from '../store/actions/countdown'
 import {connect} from 'react-redux'
 import {
   Platform,
@@ -28,7 +30,7 @@ class ConnectBluetoothScreen extends Component {
     }
   }
   componentDidMount(){
- 
+    this.countdownInSeconds({data: "C \\r\\n1234567"})
     Promise.all([
       BluetoothSerial.isEnabled(),
       BluetoothSerial.list()
@@ -66,7 +68,7 @@ class ConnectBluetoothScreen extends Component {
     BluetoothSerial.connect(device.id)
     .then((res) => {
       console.log(`Connected to device ${device.name}`);
-      this.getCurrentTime()
+      //this.getCurrentTime()
       this.bluetoothListener()
       //TODO: skicka med date.now till arduinon.
       ToastAndroid.show(`Connected to device ${device.name}`, ToastAndroid.SHORT);
@@ -80,6 +82,7 @@ class ConnectBluetoothScreen extends Component {
     BluetoothSerial.withDelimiter('\r\n')
     .then((res)=>{
       BluetoothSerial.on('read', (data)=>{
+        console.log(data)
         var command = data.data.substring(0,1)
         switch(command){
           case "I":
@@ -88,7 +91,13 @@ class ConnectBluetoothScreen extends Component {
           case "O":
             this.technicianClockOut(data);
             break;
-          case "W":
+          case "T":
+            this.getCurrentTime();
+            break;
+          case "C":
+            this.countdownInSeconds(data);
+            break;
+          case "L":
             this.radiationTimeLimit();
           default:
             break;
@@ -152,9 +161,16 @@ class ConnectBluetoothScreen extends Component {
     .catch((err) => console.log(err.message))
   }
 
+  countdownInSeconds(data){
+    //"C \r\n234567896"
+    let secondsString = data.data.substring(6,data.data.length)
+    let seconds = parseInt(secondsString)
+    this.props.countdownTimer(seconds)
+  }
+
   getCurrentTime(){
-    const now = new Date().toLocaleTimeString()
-    BluetoothSerial.write(now)
+    const currentTime = "T " + new Date().toLocaleTimeString()
+    BluetoothSerial.write(currentTime)
     .then((res) => {
       console.log(res);
       this.setState({connected: true})
@@ -169,10 +185,12 @@ class ConnectBluetoothScreen extends Component {
   
   technicianClockOut(data){
     this.props.clockOut()
+    this.props.removeWarning()
     ToastAndroid.show(`Clock out`, ToastAndroid.SHORT);
   }
 
   radiationTimeLimit(){
+    this.props.warning()
     ToastAndroid.show("WARNING! GET OUT!!!!!!!!", ToastAndroid.LONG)
   }
 
@@ -247,4 +265,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect(null, {clockIn, clockOut})(ConnectBluetoothScreen);
+export default connect(null, {clockIn, clockOut, warning, removeWarning, countdownTimer})(ConnectBluetoothScreen);

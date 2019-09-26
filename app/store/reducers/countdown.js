@@ -1,4 +1,4 @@
-import  {COUNTDOWN} from "../actions/countdown"
+import  {COUNTDOWN} from "../actions/types"
 
 const initialState = {
     seconds: 0

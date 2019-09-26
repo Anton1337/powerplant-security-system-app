@@ -37,7 +37,7 @@ const HomeScreen = (state) => {
       </View>
       {/* CLOCK TIMER COUNTDOWN */}
       <View style={styles.countdownView}>
-          <Text style={styles.countdownTimer}>{state.countdown.seconds}</Text>
+          <Text style={styles.countdownTimer}>{new Date(state.countdown.seconds * 1000).toISOString().substr(11,8)}</Text>
         </View>
     </View>
   );

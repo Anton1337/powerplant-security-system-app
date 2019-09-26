@@ -75,6 +75,7 @@ class ConnectBluetoothScreen extends Component {
   }
 
   //kalla på denna funktion nånstans? kanske bryta ut dessa till en egen fil.
+  //Möjligt att skapa en stand alone bluetooth js fil?
   bluetoothListener(){
     BluetoothSerial.withDelimiter('\r\n')
     .then((res)=>{

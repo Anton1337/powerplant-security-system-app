@@ -81,10 +81,10 @@ class ConnectBluetoothScreen extends Component {
       BluetoothSerial.on('read', (data)=>{
         var command = data.data.substring(0,1)
         switch(command){
-          case "X":
+          case "I":
             this.technicianClockIn(data);
             break;
-          case "Y":
+          case "O":
             this.technicianClockOut(data);
             break;
           case "W":
@@ -142,7 +142,7 @@ class ConnectBluetoothScreen extends Component {
 
   
   toggleLightSwitch(){
-    BluetoothSerial.write('T')
+    BluetoothSerial.write('L')
     .then((res) => {
       console.log(res);
       console.log('Successfuly wrote to device');

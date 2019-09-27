@@ -30,7 +30,7 @@ class ConnectBluetoothScreen extends Component {
     }
   }
   componentDidMount(){
-    this.countdownInSeconds({data: "C \\r\\n1234567"})
+    //this.countdownInSeconds({data: "C \\r\\n1234567"})
     Promise.all([
       BluetoothSerial.isEnabled(),
       BluetoothSerial.list()
@@ -87,6 +87,7 @@ class ConnectBluetoothScreen extends Component {
         switch(command){
           case "I":
             this.technicianClockIn(data);
+            //this.countdownInSeconds(data);
             break;
           case "O":
             this.technicianClockOut(data);
@@ -94,10 +95,10 @@ class ConnectBluetoothScreen extends Component {
           case "T":
             this.getCurrentTime();
             break;
-          case "C":
+          case "L":
             this.countdownInSeconds(data);
             break;
-          case "L":
+          case "W":
             this.radiationTimeLimit();
           default:
             break;
@@ -151,20 +152,16 @@ class ConnectBluetoothScreen extends Component {
   }
 
   
-  toggleLightSwitch(){
-    BluetoothSerial.write('L')
-    .then((res) => {
-      console.log(res);
-      console.log('Successfuly wrote to device');
-      this.setState({connected: true})
-    })
-    .catch((err) => console.log(err.message))
-  }
 
   countdownInSeconds(data){
-    //"C \r\n234567896"
-    let secondsString = data.data.substring(6,data.data.length)
+    //'L 15\r\n'
+    console.log("cowndownInSeconds func data ")
+    console.log(data)
+    let secondsString = data.data.substring(2,data.data.length-4)
+    console.log("cowndownInSeconds func secondsstring ")
+    console.log(secondsString)
     let seconds = parseInt(secondsString)
+    
     this.props.countdownTimer(seconds)
   }
 
@@ -191,7 +188,7 @@ class ConnectBluetoothScreen extends Component {
 
   radiationTimeLimit(){
     this.props.warning()
-    ToastAndroid.show("WARNING! GET OUT!!!!!!!!", ToastAndroid.LONG)
+    ToastAndroid.show("WARNING, Leave now!", ToastAndroid.LONG)
   }
 
   render() {
@@ -221,11 +218,6 @@ class ConnectBluetoothScreen extends Component {
           data={this.state.devices}
           keyExtractor={item => item.id}
           renderItem={(item) => this._renderItem(item)}
-        />
-        <Button
-          onPress={this.toggleLightSwitch.bind(this)}
-          title="Tänd/släck"
-          color="#000"
         />
       </View>
     );

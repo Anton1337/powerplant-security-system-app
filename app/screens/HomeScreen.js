@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 
 const HomeScreen = (state) => {
-  console.log("FROM HOMESCREEN")
-  console.log(state.countdown.seconds)
   /*const [warningRed, setWarningRed] = useState(false);
 
   useEffect(() => {

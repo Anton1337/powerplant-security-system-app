@@ -31,7 +31,7 @@ const HomeScreen = (state) => {
       {/* CLOCK IN STATUS */}
       <View style={styles.clockStatus}>
         <Text style={styles.clockText}>
-          You are <Text style={state.clocks.clockedIn ? styles.clockInStatusText : styles.clockOutStatusText}>Clocked {state.clocks.clockedIn ? 'in' : 'out'}!</Text>
+          You are <Text style={state.events.clockedIn ? styles.clockInStatusText : styles.clockOutStatusText}>Clocked {state.events.clockedIn ? 'in' : 'out'}!</Text>
         </Text>
       </View>
       {/* CLOCK TIMER COUNTDOWN */}
@@ -50,7 +50,7 @@ const HomeScreen = (state) => {
 };
 
 const mapStateToProps = state => ({
-  clocks: state.clocks,
+  events: state.events,
   warning: state.warning,
   countdown: state.countdown
 })

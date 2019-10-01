@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BluetoothSerial from 'react-native-bluetooth-serial'
-import {clockIn, clockOut} from '../store/actions/clocks'
+import {clockIn, clockOut, newRoom, toggleSuit, changeCoefficient} from '../store/actions/events'
 import {warning, removeWarning} from '../store/actions/warning'
 import {countdownTimer, resetTimer} from '../store/actions/countdown'
 import {connect} from 'react-redux'
@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   ToastAndroid
 } from 'react-native';
+import { parse } from '@babel/parser';
 var _ = require('lodash');
 
  
@@ -31,6 +32,7 @@ class ConnectBluetoothScreen extends Component {
   }
   componentDidMount(){
     //this.countdownInSeconds({data: "C 1234567\\r\\n"})
+    this.technicianClockOut({data: "O HH:MM:SS 1312\\r\\n"})
     Promise.all([
       BluetoothSerial.isEnabled(),
       BluetoothSerial.list()
@@ -99,6 +101,10 @@ class ConnectBluetoothScreen extends Component {
             break;
           case "W":
             this.radiationTimeLimit();
+          case "R":
+            this.newRoom(data);
+          case "P":
+            this.hazmatsuit(data);
           default:
             break;
         }
@@ -153,10 +159,13 @@ class ConnectBluetoothScreen extends Component {
   
 
   countdownInSeconds(data){
-    let secondsString = data.data.substring(2,data.data.length-4)
+    let coefficientString = data.data.split(" ")[1]
+    let coefficient = parseInt(coefficientString)
+    let secondsStringAndBackslashCharacters = data.data.split(" ")[2]
+    let secondsString = secondsStringAndBackslashCharacters.substring(0, secondsStringAndBackslashCharacters.length-4)
     let seconds = parseInt(secondsString)
-    
     this.props.countdownTimer(seconds)
+    this.props.changeCoefficient(coefficient)
   }
 
   getCurrentTime(){
@@ -176,10 +185,27 @@ class ConnectBluetoothScreen extends Component {
   }
   
   technicianClockOut(data){
-    this.props.clockOut()
+    let radiationAndBackslashCharacters = data.data.split(" ")[2]
+    let radiationString = radiationAndBackslashCharacters.substring(0, radiationAndBackslashCharacters.length-4)
+    let radiation = parseInt(radiationString)
+    this.props.clockOut(radiation)
     this.props.removeWarning()
     this.props.resetTimer()
     ToastAndroid.show(`Clock out`, ToastAndroid.SHORT);
+  }
+
+  newRoom(data){
+    let roomAndBackslashCharacters = data.data.split(" ")[1]
+    let roomString = roomAndBackslashCharacters.substring(0, roomAndBackslashCharacters.length-4)
+    let room = parseInt(roomString)
+    this.props.newRoom(room)
+  }
+
+  hazmatsuit(data){
+    let suitAndBackslashCharacters = data.data.split(" ")[1]
+    let suitString = suitAndBackslashCharacters.substring(0, suitAndBackslashCharacters.length-4)
+    let suit = parseInt(suitString)
+    this.props.toggleSuit(suit)
   }
 
   radiationTimeLimit(){
@@ -253,4 +279,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect(null, {clockIn, clockOut, warning, removeWarning, countdownTimer, resetTimer})(ConnectBluetoothScreen);
+export default connect(null, {clockIn, clockOut, warning, removeWarning, countdownTimer, resetTimer, newRoom, toggleSuit, changeCoefficient})(ConnectBluetoothScreen);

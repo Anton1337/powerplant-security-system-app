@@ -9,13 +9,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../screens/HomeScreen';
 import RadiationScreen from '../screens/RadiationScreen';
 import ConnectBluetoohScreen from '../screens/ConnectBluetoothScreen';
-import TechnicianHistoryScreen from '../screens/TechnicianHistoryScreen'
+import TechnicianHistoryNavigator from './TechnicianEventNavigator'
 
 const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
-    TechnicianHistory: TechnicianHistoryScreen,
-    Radiation: RadiationScreen,
+    History: TechnicianHistoryNavigator,
+    //Radiation: RadiationScreen,
     Connect: ConnectBluetoohScreen
   },
   {
@@ -26,9 +26,11 @@ const TabNavigator = createBottomTabNavigator(
         let iconName;
         if (routeName === 'Home') {
           iconName = 'md-home';
-        } else if (routeName === 'TechnicianHistory') {
+        } else if (routeName === 'History') {
           iconName = 'md-filing';
-        } else if (routeName === 'Connect'){
+        } /*else if (routeName === 'Radiation') {
+          iconName = 'md-pulse';
+        } */else if (routeName === 'Connect'){
           iconName = 'md-bluetooth';
         }
 

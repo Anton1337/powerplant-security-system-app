@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import {clockIn, clockOut} from '../store/actions/clocks'
 import {warning, removeWarning} from '../store/actions/warning'
-import {countdownTimer} from '../store/actions/countdown'
+import {countdownTimer, resetTimer} from '../store/actions/countdown'
 import {connect} from 'react-redux'
 import {
   Platform,
@@ -30,7 +30,7 @@ class ConnectBluetoothScreen extends Component {
     }
   }
   componentDidMount(){
-    //this.countdownInSeconds({data: "C \\r\\n1234567"})
+    //this.countdownInSeconds({data: "C 1234567\\r\\n"})
     Promise.all([
       BluetoothSerial.isEnabled(),
       BluetoothSerial.list()
@@ -87,7 +87,6 @@ class ConnectBluetoothScreen extends Component {
         switch(command){
           case "I":
             this.technicianClockIn(data);
-            //this.countdownInSeconds(data);
             break;
           case "O":
             this.technicianClockOut(data);
@@ -154,12 +153,7 @@ class ConnectBluetoothScreen extends Component {
   
 
   countdownInSeconds(data){
-    //'L 15\r\n'
-    console.log("cowndownInSeconds func data ")
-    console.log(data)
     let secondsString = data.data.substring(2,data.data.length-4)
-    console.log("cowndownInSeconds func secondsstring ")
-    console.log(secondsString)
     let seconds = parseInt(secondsString)
     
     this.props.countdownTimer(seconds)
@@ -177,12 +171,14 @@ class ConnectBluetoothScreen extends Component {
 
   technicianClockIn(data){
     this.props.clockIn()
+    this.countdownInSeconds(data);
     ToastAndroid.show(`Clock in`, ToastAndroid.SHORT);
   }
   
   technicianClockOut(data){
     this.props.clockOut()
     this.props.removeWarning()
+    this.props.resetTimer()
     ToastAndroid.show(`Clock out`, ToastAndroid.SHORT);
   }
 
@@ -257,4 +253,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect(null, {clockIn, clockOut, warning, removeWarning, countdownTimer})(ConnectBluetoothScreen);
+export default connect(null, {clockIn, clockOut, warning, removeWarning, countdownTimer, resetTimer})(ConnectBluetoothScreen);

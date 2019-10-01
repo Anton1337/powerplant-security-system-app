@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import {connect} from 'react-redux'
+import CountDown from 'react-native-countdown-component'
 
 import {
   SafeAreaView,
@@ -34,9 +35,16 @@ const HomeScreen = (state) => {
         </Text>
       </View>
       {/* CLOCK TIMER COUNTDOWN */}
-      <View style={styles.countdownView}>
+      {/*<View style={styles.countdownView}>
           <Text style={styles.countdownTimer}>{new Date(state.countdown.seconds * 1000).toISOString().substr(11,8)}</Text>
-        </View>
+        </View>*/}
+      <View style={styles.countdownView}>
+        <CountDown
+          until={state.countdown.seconds}
+          timetoShow={('H', 'M', 'S')}
+          size={30}
+        />
+      </View>
     </View>
   );
 };
@@ -81,8 +89,7 @@ const styles = StyleSheet.create({
   countdownView: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
+    marginTop: '40%'
   },
   countdownTimer: {
     marginTop: '40%',

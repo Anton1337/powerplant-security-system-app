@@ -6,3 +6,4 @@ export const NOWARNING = 'NOWARNING'
 export const INVERSEWARNING = 'INVERSEWARNING'
 
 export const COUNTDOWN = 'COUNTDOWN'
+export const RESETTIMER = 'RESETTIMER'

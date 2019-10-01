@@ -1,4 +1,4 @@
-import  {COUNTDOWN} from "../actions/types"
+import  {COUNTDOWN, RESETTIMER} from "../actions/types"
 
 const initialState = {
     seconds: 0
@@ -15,6 +15,10 @@ export default function(state = initialState, action){
           return {
               seconds: payload
           }
+        case RESETTIMER:
+        return {
+            seconds: 0
+        }
         default:
           return state
       }

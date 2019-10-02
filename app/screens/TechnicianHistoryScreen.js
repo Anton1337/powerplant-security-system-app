@@ -47,7 +47,8 @@ const mapStateToProps = state => ({
 
 TechnicianHistoryScreen.navigationOptions = navData => {
   return {
-    headerTitle: "Technician event history"
+    headerTitle: "Technician event history",
+    headerTitleStyle: {textAlign: 'center', flex: 1}
   }
 }
 

@@ -32,7 +32,7 @@ class ConnectBluetoothScreen extends Component {
   }
   componentDidMount(){
     //this.countdownInSeconds({data: "C 1234567\\r\\n"})
-    this.technicianClockOut({data: "O HH:MM:SS 1312\\r\\n"})
+    //this.technicianClockOut({data: "O HH:MM:SS 1312\\r\\n"})
     Promise.all([
       BluetoothSerial.isEnabled(),
       BluetoothSerial.list()
@@ -85,7 +85,7 @@ class ConnectBluetoothScreen extends Component {
     .then((res)=>{
       BluetoothSerial.on('read', (data)=>{
         console.log(data)
-        var command = data.data.substring(0,1)
+        var command = data.data.split(" ")[0]
         switch(command){
           case "I":
             this.technicianClockIn(data);
@@ -101,10 +101,13 @@ class ConnectBluetoothScreen extends Component {
             break;
           case "W":
             this.radiationTimeLimit();
+            break;
           case "R":
             this.newRoom(data);
+            break;
           case "P":
             this.hazmatsuit(data);
+            break;
           default:
             break;
         }
@@ -159,10 +162,11 @@ class ConnectBluetoothScreen extends Component {
   
 
   countdownInSeconds(data){
+    console.log("GET SCONDS?")
+    console.log(data.data)
     let coefficientString = data.data.split(" ")[1]
     let coefficient = parseInt(coefficientString)
-    let secondsStringAndBackslashCharacters = data.data.split(" ")[2]
-    let secondsString = secondsStringAndBackslashCharacters.substring(0, secondsStringAndBackslashCharacters.length-4)
+    let secondsString = data.data.split(" ")[2]
     let seconds = parseInt(secondsString)
     this.props.countdownTimer(seconds)
     this.props.changeCoefficient(coefficient)
@@ -178,15 +182,14 @@ class ConnectBluetoothScreen extends Component {
     .catch((err) => console.log(err.message))
   }
 
-  technicianClockIn(data){
+  technicianClockIn(){
     this.props.clockIn()
-    this.countdownInSeconds(data);
     ToastAndroid.show(`Clock in`, ToastAndroid.SHORT);
   }
   
   technicianClockOut(data){
-    let radiationAndBackslashCharacters = data.data.split(" ")[2]
-    let radiationString = radiationAndBackslashCharacters.substring(0, radiationAndBackslashCharacters.length-4)
+    console.log("CLOCKOUT?", data.data)
+    let radiationString = data.data.split(" ")[2]
     let radiation = parseInt(radiationString)
     this.props.clockOut(radiation)
     this.props.removeWarning()
@@ -195,15 +198,16 @@ class ConnectBluetoothScreen extends Component {
   }
 
   newRoom(data){
-    let roomAndBackslashCharacters = data.data.split(" ")[1]
-    let roomString = roomAndBackslashCharacters.substring(0, roomAndBackslashCharacters.length-4)
+    console.log("NEW ROOM?",data.data)
+    let roomString = data.data.split(" ")[1]
     let room = parseInt(roomString)
     this.props.newRoom(room)
   }
 
   hazmatsuit(data){
-    let suitAndBackslashCharacters = data.data.split(" ")[1]
-    let suitString = suitAndBackslashCharacters.substring(0, suitAndBackslashCharacters.length-4)
+    
+    console.log("SUIT?",data.data)
+    let suitString = data.data.split(" ")[1]
     let suit = parseInt(suitString)
     this.props.toggleSuit(suit)
   }

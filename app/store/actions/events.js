@@ -1,4 +1,4 @@
-import  {CLOCKIN, CLOCKOUT, EVENTS, NEWROOM, COEFFICIENT} from "./types"
+import  {CLOCKIN, CLOCKOUT, EVENTS, NEWROOM, COEFFICIENT, SUIT} from "./types"
 import axios from 'axios'
 
 export const clockIn = () => async dispatch => {

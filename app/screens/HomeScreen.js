@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import BluetoothSerial from 'react-native-bluetooth-serial'
 import {connect} from 'react-redux'
 import CountDown from 'react-native-countdown-component'
+import {warning} from '../store/actions/warning'
 
 import {
   SafeAreaView,
@@ -13,21 +14,8 @@ import {
 } from 'react-native';
 
 const HomeScreen = (state) => {
-  /*const [warningRed, setWarningRed] = useState(false);
-
-  useEffect(() => {
-    if(state.warning.warning) blinking();
-  }, [])
-
-  const blinking = () => {
-    setInterval( () => {
-      setWarningRed(previousState => {
-        return !previousState.warningRed
-      });
-    }, 500)
-  }*/
   return (
-    <View style={state.warning.warning ? styles.warningScreen : styles.screen}>
+    <View style={state.warningState.warning ? styles.warningScreen : styles.screen}>
       {/* CLOCK IN STATUS */}
       <View style={styles.clockStatus}>
         <Text style={styles.clockText}>
@@ -35,15 +23,19 @@ const HomeScreen = (state) => {
         </Text>
       </View>
       {/* CLOCK TIMER COUNTDOWN */}
-      {/*<View style={styles.countdownView}>
-          <Text style={styles.countdownTimer}>{new Date(state.countdown.seconds * 1000).toISOString().substr(11,8)}</Text>
-        </View>*/}
       <View style={styles.countdownView}>
-        <CountDown
-          until={state.countdown.seconds}
-          timetoShow={('H', 'M', 'S')}
-          size={30}
-        />
+        {state.warningState.warning ? <Text style={styles.warningText}>WARNING! LEAVE NOW!</Text> : 
+          <CountDown
+            until={state.countdown.seconds}
+            timetoShow={('H', 'M', 'S')}
+            size={30}
+            onFinish={()=> {
+              if(state.events.clockedIn) {
+                state.warning()
+              }
+            }}
+          />
+        }
       </View>
     </View>
   );
@@ -51,11 +43,17 @@ const HomeScreen = (state) => {
 
 const mapStateToProps = state => ({
   events: state.events,
-  warning: state.warning,
+  warningState: state.warning,
   countdown: state.countdown
 })
 
 const styles = StyleSheet.create({
+  displayHidden: {
+    
+  },
+  displayShow: {
+    
+  },
   screen: {
   },
   warningScreen: {
@@ -94,7 +92,12 @@ const styles = StyleSheet.create({
   countdownTimer: {
     marginTop: '40%',
     fontSize: 45
+  },
+  warningText: {
+    color: "white",
+    fontSize: 30,
+    textAlign: 'center'
   }
 });
 
-export default connect(mapStateToProps, null)(HomeScreen);
+export default connect(mapStateToProps, {warning})(HomeScreen);

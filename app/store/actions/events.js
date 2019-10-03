@@ -24,29 +24,32 @@ export const clockOut = (radiation) => async dispatch => {
 }
 
 export const getEvents = () => async dispatch => {
-    axios.get("https://powerplant-security-system-api.herokuapp.com/api/v1/events")
-    .then(function(response){
-        console.log(response.data)
-        dispatch({
-            type: EVENTS,
-            payload: response.data
-        })
+    const res = await axios.get("https://powerplant-security-system-api.herokuapp.com/api/v1/events")
+    console.log(res.data)
+    dispatch({
+        type: EVENTS,
+        payload: res.data
     })
 }
 
 export const newRoom = (room) => async dispatch => {
-    const res = await axios({
-        method: 'POST',
-        url: 'https://powerplant-security-system-api.herokuapp.com/api/v1/events/room',
-        data: {currentRoom: room},
-        headers: {
-        'content-type': 'application/json',
-        },
-    });
-    dispatch({
-        type: NEWROOM,
-        payload: res.data
-    })
+    console.log("ANTON LUKTAR RUM",room)
+    try {
+        const res = await axios({
+            method: 'POST',
+            url: 'https://powerplant-security-system-api.herokuapp.com/api/v1/events/room',
+            data: {currentRoom: room},
+            headers: {
+            'content-type': 'application/json',
+            },
+        });
+        dispatch({
+            type: NEWROOM,
+            payload: res.data
+        })
+    } catch (err) {
+        console.error('FUCK');
+    }
 }
 
 export const toggleSuit = (suit) => async dispatch => {

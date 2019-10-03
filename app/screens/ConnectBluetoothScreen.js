@@ -31,7 +31,7 @@ class ConnectBluetoothScreen extends Component {
     }
   }
   componentDidMount(){
-    //this.countdownInSeconds({data: "C 1234567\\r\\n"})
+    //this.countdownInSeconds({data: "L 15 15 "})
     //this.technicianClockOut({data: "O HH:MM:SS 1312\\r\\n"})
     Promise.all([
       BluetoothSerial.isEnabled(),
@@ -70,22 +70,20 @@ class ConnectBluetoothScreen extends Component {
     BluetoothSerial.connect(device.id)
     .then((res) => {
       console.log(`Connected to device ${device.name}`);
-      //this.getCurrentTime()
       this.bluetoothListener()
-      //TODO: skicka med date.now till arduinon.
       ToastAndroid.show(`Connected to device ${device.name}`, ToastAndroid.SHORT);
     })
     .catch((err) => console.log((err.message)))
   }
 
-  //kalla på denna funktion nånstans? kanske bryta ut dessa till en egen fil.
-  //Möjligt att skapa en standalone bluetooth js fil?
   bluetoothListener(){
-    BluetoothSerial.withDelimiter('\r\n')
+    BluetoothSerial.withDelimiter(';')
     .then((res)=>{
       BluetoothSerial.on('read', (data)=>{
-        console.log(data)
-        var command = data.data.split(" ")[0]
+        let test = data.data.replace('\r\n','')
+        console.log("TEST VARIABLE",test)
+        var command = test.split(" ")[0]
+        console.log("COMMAND VARIABLE", command)
         switch(command){
           case "I":
             this.technicianClockIn(data);
@@ -93,14 +91,14 @@ class ConnectBluetoothScreen extends Component {
           case "O":
             this.technicianClockOut(data);
             break;
-          case "T":
+          case "T;":
             this.getCurrentTime();
             break;
           case "L":
             this.countdownInSeconds(data);
             break;
           case "W":
-            this.radiationTimeLimit();
+            //this.radiationTimeLimit();
             break;
           case "R":
             this.newRoom(data);
@@ -162,11 +160,11 @@ class ConnectBluetoothScreen extends Component {
   
 
   countdownInSeconds(data){
-    console.log("GET SCONDS?")
-    console.log(data.data)
-    let coefficientString = data.data.split(" ")[1]
+    let dataString = data.data.replace(';', '')
+    console.log("GET SECONDS?",dataString)
+    let coefficientString = dataString.split(" ")[1]
     let coefficient = parseInt(coefficientString)
-    let secondsString = data.data.split(" ")[2]
+    let secondsString = dataString.split(" ")[2]
     let seconds = parseInt(secondsString)
     this.props.countdownTimer(seconds)
     this.props.changeCoefficient(coefficient)
@@ -188,8 +186,9 @@ class ConnectBluetoothScreen extends Component {
   }
   
   technicianClockOut(data){
-    console.log("CLOCKOUT?", data.data)
-    let radiationString = data.data.split(" ")[2]
+    let dataString = data.data.replace(';', '')
+    console.log("CLOCKOUT?", dataString)
+    let radiationString = dataString.split(" ")[2]
     let radiation = parseInt(radiationString)
     this.props.clockOut(radiation)
     this.props.removeWarning()
@@ -198,16 +197,17 @@ class ConnectBluetoothScreen extends Component {
   }
 
   newRoom(data){
-    console.log("NEW ROOM?",data.data)
-    let roomString = data.data.split(" ")[1]
+    let dataString = data.data.replace(';', '')
+    console.log("NEW ROOM?",dataString)
+    let roomString = dataString.split(" ")[1]
     let room = parseInt(roomString)
     this.props.newRoom(room)
   }
 
   hazmatsuit(data){
-    
-    console.log("SUIT?",data.data)
-    let suitString = data.data.split(" ")[1]
+    let dataString = data.data.replace(';', '')
+    console.log("SUIT?",dataString)
+    let suitString = dataString.split(" ")[1]
     let suit = parseInt(suitString)
     this.props.toggleSuit(suit)
   }

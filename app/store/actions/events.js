@@ -25,7 +25,6 @@ export const clockOut = (radiation) => async dispatch => {
 
 export const getEvents = () => async dispatch => {
     const res = await axios.get("https://powerplant-security-system-api.herokuapp.com/api/v1/events")
-    console.log(res.data)
     dispatch({
         type: EVENTS,
         payload: res.data
@@ -33,7 +32,7 @@ export const getEvents = () => async dispatch => {
 }
 
 export const newRoom = (room) => async dispatch => {
-    console.log("ANTON LUKTAR RUM",room)
+    console.log("FICK VI IN ROOM I ACTIONEN?",room)
     try {
         const res = await axios({
             method: 'POST',
@@ -48,7 +47,7 @@ export const newRoom = (room) => async dispatch => {
             payload: res.data
         })
     } catch (err) {
-        console.error('FUCK');
+        console.error('FUCK', err);
     }
 }
 

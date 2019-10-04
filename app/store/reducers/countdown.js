@@ -9,16 +9,16 @@ export default function(state = initialState, action){
         type,
         payload
     } = action
-
+    console.log("REDUCER COUNTDOWN", payload)
     switch(type){
         case COUNTDOWN:
-          return {
-              seconds: payload
-          }
+            return {
+                seconds: payload
+            }
         case RESETTIMER:
-        return {
-            seconds: 0
-        }
+            return {
+                seconds: 0
+            }
         default:
           return state
       }

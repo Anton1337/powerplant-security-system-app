@@ -81,6 +81,7 @@ class ConnectBluetoothScreen extends Component {
     .then((res)=>{
       BluetoothSerial.on('read', (data)=>{
         let dataString = data.data.replace('\r\n','').replace(";","")
+        this.setState({temp: dataString})
         console.log("DATASTRING VARIABLE",dataString)
         var command = dataString.split(" ")[0]
         if(this.props.events.clockedIn)
@@ -95,11 +96,10 @@ class ConnectBluetoothScreen extends Component {
               this.countdownInSeconds(dataString);
               break;
             case "W":
-              this.respondToArduino("W")
-              //this.radiationTimeLimit();
+              this.radiationTimeLimit();
               break;
             case "R":
-              this.newRoom(dataString);
+              this.changeRoom(dataString);
               break;
             case "P":
               this.hazmatsuit(dataString);
@@ -197,8 +197,8 @@ class ConnectBluetoothScreen extends Component {
     let radiation = parseInt(radiationString)
     //console.log("RADIATION", radiation)
     this.props.clockOut(radiation)
-    this.props.removeWarning()
     this.props.resetTimer()
+    this.props.removeWarning()
     ToastAndroid.show(`Clock out`, ToastAndroid.SHORT)
     this.respondToArduino("O")
   }
@@ -216,7 +216,7 @@ class ConnectBluetoothScreen extends Component {
     this.respondToArduino("L")
   }
 
-  newRoom(dataString){
+  changeRoom(dataString){
     //console.log("new room function",dataString)
     let roomString = dataString.split(" ")[1]
     let room = parseInt(roomString)
@@ -237,6 +237,7 @@ class ConnectBluetoothScreen extends Component {
   radiationTimeLimit(){
     this.props.warning()
     ToastAndroid.show("WARNING, Leave now!", ToastAndroid.LONG)
+    this.respondToArduino("W")
   }
 
   render() {

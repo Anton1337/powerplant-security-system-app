@@ -33,8 +33,11 @@ const TechnicianHistoryScreen = (state) => {
     <View>
       <FlatList
           data={state.events.events}
-          renderItem={({ item }) => <Item clockin={new Date(item.clockin).toUTCString()} cellPressed={()=>{
-            state.navigation.navigate('eventScreen',{title: 'test'})
+          renderItem={({ item }) => <Item clockin={new Date(item.clockin).toLocaleString()} cellPressed={()=>{
+            state.navigation.navigate('eventScreen',{
+              eventId: item._id,
+              eventTitle: new Date(item.clockin).toLocaleString()
+            })
           }} />}
           keyExtractor={item => item._id}
       />

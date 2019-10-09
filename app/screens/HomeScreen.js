@@ -29,11 +29,11 @@ const HomeScreen = (state) => {
             until={state.countdown.seconds}
             timetoShow={('H', 'M', 'S')}
             size={30}
-            onFinish={()=> {
+            /*onFinish={()=> {
               if(state.events.clockedIn) {
                 state.warning()
               }
-            }}
+            }}*/
           />
         }
       </View>

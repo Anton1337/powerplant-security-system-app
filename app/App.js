@@ -28,6 +28,8 @@ const rootReducer = combineReducers({events, warning, countdown});
 
 const store = createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(...middleware)));
 
+console.disableYellowBox = true
+
 const App = () => {
   return (
     <Provider store={store}>

@@ -15,13 +15,13 @@ export default function(state = initialState, action){
         case CLOCKIN:
           return {
             ...state, 
-            events: [payload, ...state.events],
+            //events: [payload, ...state.events],
             clockedIn: true
           }
         case CLOCKOUT:
           return {
               ...state,
-              events: [payload, state.events.filter(e => e._id != payload._id)],
+              events: payload,
               clockedIn: false
           }
         case EVENTS:
@@ -32,17 +32,17 @@ export default function(state = initialState, action){
         case NEWROOM:
             return {
                 ...state,
-                events: [payload, state.events.filter(e => e._id != payload._id)]
+                //events: [payload, state.events.filter(e => e._id != payload._id)]
             }
         case SUIT:
             return {
                 ...state,
-                events: [payload, state.events.filter(e => e._id != payload._id)]
+                //events: [payload, state.events.filter(e => e._id != payload._id)]
             }
         case COEFFICIENT:
             return {
                 ...state,
-                events: [payload, state.events.filter(e => e._id != payload._id)]
+                //events: [payload, state.events.filter(e => e._id != payload._id)]
             }
         default:
           return state

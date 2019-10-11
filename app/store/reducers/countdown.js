@@ -11,8 +11,6 @@ export default function(state = initialState, action){
     } = action
     switch(type){
         case COUNTDOWN:
-                //console.log("REDUCER COUNTDOWN PAYLOAD", payload)
-                //console.log("REDUCER COUNTDOWN TYPE", type)
             return {
                 seconds: payload
             }

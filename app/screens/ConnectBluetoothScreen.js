@@ -31,8 +31,6 @@ class ConnectBluetoothScreen extends Component {
     }
   }
   componentDidMount(){
-    //this.countdownInSeconds({data: "L 15 15 "})
-    //this.technicianClockOut({data: "O HH:MM:SS 1312\\r\\n"})
     Promise.all([
       BluetoothSerial.isEnabled(),
       BluetoothSerial.list()
@@ -44,7 +42,6 @@ class ConnectBluetoothScreen extends Component {
     })
  
     BluetoothSerial.on('bluetoothEnabled', () => {
- 
       Promise.all([
         BluetoothSerial.isEnabled(),
         BluetoothSerial.list()
@@ -55,9 +52,7 @@ class ConnectBluetoothScreen extends Component {
       })
  
       BluetoothSerial.on('bluetoothDisabled', () => {
- 
          this.setState({ devices: [] })
- 
       })
       BluetoothSerial.on('error', (err) => console.log(`Error: ${err.message}`))
  
@@ -65,6 +60,7 @@ class ConnectBluetoothScreen extends Component {
  
   }
 
+  //connect to a bluetooth device
   connect(device){
     this.setState({connecting: true})
     BluetoothSerial.connect(device.id)
@@ -76,15 +72,17 @@ class ConnectBluetoothScreen extends Component {
     .catch((err) => console.log((err.message)))
   }
 
+  //this will "listen" all incoming data
   bluetoothListener(){
+    //Each command from Arduino ends with a ";"
+    //This is to determine when an command ends
     BluetoothSerial.withDelimiter(';')
     .then((res)=>{
       BluetoothSerial.on('read', (data)=>{
+        //commands recived are recieved as strings. We remove all unnecessary characters 
         let dataString = data.data.replace('\r\n','').replace(";","")
-        this.setState({temp: dataString})
-        console.log("DATASTRING VARIABLE",dataString)
         var command = dataString.split(" ")[0]
-        if(this.props.events.clockedIn)
+        if(this.props.events.clockedIn){
           switch(command){
             case "O":
               this.technicianClockOut(dataString);
@@ -107,6 +105,7 @@ class ConnectBluetoothScreen extends Component {
             default:
               break;
           }
+        }
         else{
           switch(command){
             case "I":
@@ -122,7 +121,6 @@ class ConnectBluetoothScreen extends Component {
   }
 
   _renderItem(item){
- 
     return(<TouchableOpacity onPress={() => this.connect(item.item)}>
             <View style={styles.deviceNameWrap}>
               <Text style={styles.deviceName}>{ item.item.name ? item.item.name : item.item.id }</Text>
@@ -167,6 +165,7 @@ class ConnectBluetoothScreen extends Component {
 
   
 
+  //this function is used to tell Arduino that we recieved message
   respondToArduino(command){
     BluetoothSerial.write(command)
     .then((res) => {
@@ -179,23 +178,23 @@ class ConnectBluetoothScreen extends Component {
     const currentTime = "T " + new Date().toLocaleTimeString()
     BluetoothSerial.write(currentTime)
     .then((res) => {
-      console.log(res, currentTime);
       this.setState({connected: true})
     })
     .catch((err) => console.log(err.message))
   }
 
   technicianClockIn(){
+    //this.props.clockIn() = /store/actions/events.js
     this.props.clockIn()
     ToastAndroid.show(`Clock in`, ToastAndroid.SHORT)
     this.respondToArduino("I")
   }
   
   technicianClockOut(dataString){
-    //console.log("clock out function", dataString)
+    //dataString = "O HH:MM:SS RADIATION". We split on whitespace to get the radiation
     let radiationString = dataString.split(" ")[2]
     let radiation = parseInt(radiationString)
-    //console.log("RADIATION", radiation)
+    //this.props.clockOut() = /store/actions/events.js
     this.props.clockOut(radiation)
     this.props.resetTimer()
     this.props.removeWarning()
@@ -204,37 +203,38 @@ class ConnectBluetoothScreen extends Component {
   }
 
   countdownInSeconds(dataString){
-    //console.log("countdown in seconds function",dataString)
+    //dataString = "L RADIATIONLEVEL SECONDSLEFTUNTILDEATH"
     let coefficientString = dataString.split(" ")[1]
     let coefficient = parseInt(coefficientString)
     let secondsString = dataString.split(" ")[2]
     let seconds = parseInt(secondsString)
-    //console.log("SECONDS", seconds)
-    //console.log("COEFFICIENT", coefficient)
+    //this.props.countdownTime() = /store/actions/countdown.js
     this.props.countdownTimer(seconds)
+    //this.props.changeCoefficient() = /store/actions/events.js
     this.props.changeCoefficient(coefficient)
     this.respondToArduino("L")
   }
 
   changeRoom(dataString){
-    //console.log("new room function",dataString)
+    //dataString = "R ROOM"
     let roomString = dataString.split(" ")[1]
     let room = parseInt(roomString)
-    //console.log("ROOM", room)
+    //this.props.newRoom() = /store/actions/events.js
     this.props.newRoom(room)
     this.respondToArduino("R")
   }
 
   hazmatsuit(dataString){
-    //console.log("hazmat suit function",dataString)
+    //dataString = "P SUITSTATUS"
     let suitString = dataString.split(" ")[1]
     let suit = parseInt(suitString)
-    //console.log("SUIT", suit)
+    //this.props.toggleSuit() = /store/actions/events.js
     this.props.toggleSuit(suit)
     this.respondToArduino("P")
   }
 
   radiationTimeLimit(){
+    //this.props.warning() = /store/actions/warning.js
     this.props.warning()
     ToastAndroid.show("WARNING, Leave now!", ToastAndroid.LONG)
     this.respondToArduino("W")

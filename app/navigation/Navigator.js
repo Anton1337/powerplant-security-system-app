@@ -15,7 +15,6 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeScreen,
     History: TechnicianHistoryNavigator,
-    //Radiation: RadiationScreen,
     Connect: ConnectBluetoohScreen
   },
   {
@@ -28,9 +27,7 @@ const TabNavigator = createBottomTabNavigator(
           iconName = 'md-home';
         } else if (routeName === 'History') {
           iconName = 'md-filing';
-        } /*else if (routeName === 'Radiation') {
-          iconName = 'md-pulse';
-        } */else if (routeName === 'Connect'){
+        } else if (routeName === 'Connect'){
           iconName = 'md-bluetooth';
         }
 
